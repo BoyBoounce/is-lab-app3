@@ -29,14 +29,20 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Restore application
+        run: dotnet restore IsLabApp.csproj
 
-      - name: Build project
-        run: dotnet build --configuration Release --no-restore
+      - name: Restore tests
+        run: dotnet restore tests/IsLabApp.Tests/IsLabApp.Tests.csproj
+
+      - name: Build application
+        run: dotnet build IsLabApp.csproj --configuration Release --no-restore
+
+      - name: Build tests
+        run: dotnet build tests/IsLabApp.Tests/IsLabApp.Tests.csproj --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test --configuration Release --verbosity normal
+        run: dotnet test tests/IsLabApp.Tests/IsLabApp.Tests.csproj --configuration Release --no-build --verbosity normal
 
       - name: Set short SHA
         id: vars
